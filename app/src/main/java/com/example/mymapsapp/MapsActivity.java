@@ -39,7 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double latitude;
     private double longitude;
     private static final int MY_LOC_ZOOM_FACTOR = 17;
-    private boolean notTrackingMyLocation = true;
+    private boolean tracking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,20 +291,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //call getLocation if currently not tracking
     //or turn off tracking if currently enabled (removeUpdates for both listeners)
     public void trackMyLocation(View view){
-
-        if(notTrackingMyLocation){
+        tracking = !tracking;
+        if(tracking){
 
             getLocation();
             Toast.makeText(this, "tracking", Toast.LENGTH_SHORT).show();
+            dropAmarker(LocationManager.NETWORK_PROVIDER);
+            dropAmarker(LocationManager.GPS_PROVIDER);
 
-            notTrackingMyLocation = false;
-
-        } else if(!notTrackingMyLocation) {
+        } else if(!tracking) {
             locationManager.removeUpdates(locationListenerGPS);
             locationManager.removeUpdates(locationListenerNetwork);
-            Toast.makeText(this, "tracking", Toast.LENGTH_SHORT).show();
-
-            notTrackingMyLocation = true;
+            Toast.makeText(this, "not tracking", Toast.LENGTH_SHORT).show();
         }
     }
 
